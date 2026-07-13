@@ -1,0 +1,13 @@
+version: "3"
+services:
+  tokyo_query:
+    build: .
+    container_name: tokyo_query
+    working_dir: /app
+    command: python -u tokyo_single_query.py
+    volumes:
+      - ./tokyo_query_config.json:/app/tokyo_query_config.json
+      - ./tokyo_single_query.py:/app/tokyo_single_query.py
+    environment:
+      - TZ=Asia/Tokyo
+    restart: unless-stopped
