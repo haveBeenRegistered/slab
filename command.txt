@@ -1,5 +1,60 @@
 docker logs -f tokyo_query
 
+admin
+183eed2775494e98b87083bf5f0c4a3c
+
+http://34.153.216.115:8080
+
+
+
+#!/bin/bash
+set -e
+
+echo "========================================="
+echo "🚀 收到 GitHub 推送，启动全自动化部署流水线..."
+echo "========================================="
+
+# 0. 防御机制：确保容器内部能识别此绝对路径
+mkdir -p /home/rsa-key-20260714/source/
+
+# 1. 将代码全量同步到物理目录（文字修正：日志输出改为实际的新路径）
+echo "📦 正在同步代码到新物理目录 /home/rsa-key-20260714/source..."
+cp -af ./* /home/rsa-key-20260714/source/
+
+# 2. 进入新的目标物理目录
+cd /home/rsa-key-20260714/source/userEmail/
+
+# 3. 🛑 步骤一：使用纯原生命令停止并卸载旧容器
+echo "🛑 正在停止并卸载旧容器 (tokyo_query)..."
+docker stop tokyo_query || true
+docker rm tokyo_query || true
+
+# 4. 🧹 步骤二：深度清除 Docker 构建缓存与残留镜像
+echo "🧹 正在清除 Docker 构建缓存与残留镜像..."
+docker image prune --force
+docker volume prune --force
+
+# 5. ⚡ 步骤三：直接用原生 docker build 编译镜像
+echo "⚡ 正在根据 Dockerfile 编译最新镜像..."
+docker build -t tokyo_query_img .
+
+# 6. 🚀 步骤四：用原生 docker run 把容器在后台启动起来
+echo "🚀 正在启动新容器..."
+# 彻底移除冗余的文件挂载 -v，直接读取 Dockerfile COPY 进去的完好文件
+# 只保留时区配置，让流水线坚不可摧
+docker run -d \
+  --name tokyo_query \
+  --restart unless-stopped \
+  -w /app \
+  -e TZ=Asia/Tokyo \
+  tokyo_query_img \
+  python -u tokyo_single_query.py
+
+echo "========================================="
+echo "🎉 恭喜！流水线完全打通，新容器已在后台成功启动！"
+echo "========================================="
+
+
 案件；オークションサイト新規構築におけるAWS基盤構築案件
 場所；勝どき（リモート最大2日/週）
 期間；即日或いは8月から12月
@@ -16,3 +71,24 @@ IaC／テスト自動化（Go）を採用し設計・構築を並行実施。
 ・運用経験 〇
 ・Kubernetesの構築経験 ×
 ・AI駆動開発経験（インフラ） 〇
+
+
+
+■必要スキル：
+　・AWSでのインフラ構築・運用の実務経験（EC2中心の運用経験を含む）〇
+　・ネットワーク／VPNの実務経験（VPC設計、Site-to-Site／Client VPN、機器間接続など）〇
+　・Terraformによる構成管理の実務経験 〇
+　・ログからの原因特定・障害切り分けスキル（CloudWatch等での障害対応）〇
+　・少人数チームでの技術判断・自走経験（リーダー不在時に主体的に動けること）〇
+・後輩／メンバーへの指示・技術指導の経験 〇
+・落ち着いた誠実なコミュニケーション（国際色の強い環境への適応）〇
+■尚可スキル：
+　・IoT／エッジ機器とクラウドを接続する基盤の構築・運用経験 ×
+・Kubernetes／Helmの実務経験（EC2からのコンテナ移行を見据えた経験）×
+・OCI（Oracle Cloud）やマルチクラウドの経験 ×
+・メッセージング基盤（RabbitMQ／Kafka／SQS等）のインフラ観点での運用経験 〇
+・可観測性（Observability）向上・モニタリング設計の経験 〇
+・サーバー負荷分析・不要サーバーの棚卸し・コスト削減の実績 ×
+・大量データ基盤（センサーデータ等）の運用経験 ×
+・英語での基本的なコミュニケーション（読み書き・簡単な会話）〇
+・Terraformコードからの構成図自動生成などAI活用の経験 〇
