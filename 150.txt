@@ -450,10 +450,12 @@ X-Rayのセグメントタイムラインを分析したところ、ECSコンテ
 このように、CloudWatchとX-Rayを組み合わせることで、複雑な分散システムであっても、勘に頼らず「データ（ログとトレース）」に基づいて迅速に原因を特定し、修正することができました。
 
 
+Amazon S3 Glacierグレイシャー  Amazon S3 Express One Zone エクスプレス ワン ゾーン
+Amazon EBS  Amazon EFS Amazon FSx
 
 
-
-
-
+フロントエンドのビルド成果物をS3にアップロードして静的ウェブサイトホスティングを有効化し、
+それをオリジンとしてCloudFrontを設定します。
+あとはCloudflareクラウドフレア側でCloudFrontのドメインに向けたCNAMEレコードを設定し、SSL証明書とドメインプロキシの構築を完了させる構成です。
 
 
