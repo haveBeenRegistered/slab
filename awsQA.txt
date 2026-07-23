@@ -1,0 +1,84 @@
+質問（Q）	useStateとuseEffectの使い方	
+改善案・理想の回答 	"useStateはコンポーネント内で変化するデータ（画面の表示更新に必要なデータ）を管理するために使います。
+state: 現在の状態の値が入る変数
+setState: 状態を更新するための関数
+useEffect は2つの引数を受け取ります。
+コールバック関数：実行したい副作用（Side Effect）のロジックを記述します。
+依存配列（オプショナル）：コールバック関数をどのタイミングで再実行するかを制御するために指定します。
+配列なし
+useEffect(() => {})
+初回レンダリング時 ＋ 毎回の再レンダリング後	ほとんど使用されません（パフォーマンス低下の原因になります）。
+空の配列 []
+
+useEffect(() => {}, [])
+コンポーネントのマウント（初回表示）時のみ 1回実行	初回データ取得（Fetch）、サードパーティ製ライブラリの初期化など。
+依存関係の指定 [a, b]
+
+useEffect(() => {}, [a, b])
+初回マウント時 ＋ a または b の値が変化した時	検索フォームのデバウンス処理、ユーザーID変更に伴うデータの再取得など。"	
+
+
+質問（Q）	useMemo と useCallbackの使い方	
+改善案・理想の回答 	"useMemo
+計算コストの高い関数がある場合や、参照を維持したいオブジェクト・配列がある場合は、useMemo を使うことで、コンポーネントが再レンダリングされるたびに再計算や再作成が行われるのを防ぐことができます。
+useCallback
+React.memo と組み合わせて使用し、子コンポーネントへ渡す関数の参照が変わることで発生する、不要な再レンダリングを防ぐ。"	
+
+
+質問（Q）	Spring BootのController層でよく使われるアノテーションと、リクエストパラメーターのバリデーション（検証）方法	
+改善案・理想の回答 	"1. Controller層でよく使われるアノテーション
+① コンポーネント宣言アノテーション@RestController（最頻出）：@Controller と @ResponseBody を組み合わせたアノテーションです。該当クラスがControllerであることを示し、全メソッドの戻り値が自動的にJSON/XMLとしてレスポンスボディにシリアライズされます。@Controller：従来のMVCアーキテクチャ（HTMLビュー画面を返す場合）で使用します。
+② リクエストマッピング用アノテーション@RequestMapping：クラスまたはメソッドに付与し、URLパスをマッピングします。ショートカットアノテーション（メソッドへの付与を推奨）：@GetMapping：GET リクエスト（取得）の受信@PostMapping：POST リクエスト（新規作成）の受信@PutMapping：PUT リクエスト（全体更新）の受信@PatchMapping：PATCH リクエスト（部分更新）の受信@DeleteMapping：DELETE リクエスト（削除）の受信
+③ パラメーター受け取り用アノテーションアノテーション適用シーンコード例@PathVariableURLパス変数 を受け取る（例：/users/{id}）public User get(@PathVariable Long id)@RequestParamクエリパラメーター や Formデータ を受け取る（例：?name=abc）public List<User> search(@RequestParam String name)"	
+
+
+
+
+
+質問（Q）	AWSの資格をたくさんお持ちですが、どのような目的で学習を進められたのでしょうか？	
+改善案・理想の回答 	実務の幅を広げ、貢献可能な領域を自発的に広げるため	
+
+質問（Q）	一般的なJavaアプリケーションをAWS上で構築する場合、どのようなサービスを利用しますか？	
+改善案・理想の回答 	"一般的なJava（Spring Bootなど）のWebアプリケーションであれば、Web/App/DBの3層アーキテクチャで構成するのが標準的です。
+主に以下のサービスを使用します。
+フロントエンド・負荷分散（Web/Network）
+Amazon Route 53：DNSルーティング
+ALB (Application Load Balancer)：リクエストの負荷分散およびSSL/TLS終息
+
+アプリケーション層（App） (※プロジェクトの規模や運用方針に応じて選択)
+Amazon EC2：伝統的な仮想化環境（Tomcat等でJar/Warを動かす場合）
+Amazon ECS / EKS：コンテナ化（Docker）されている場合。Fargateと組み合わせてサーバーレス運用することが多いです。
+AWS Elastic Beanstalk：PaaS環境で迅速にデプロイ・運用したい場合。
+
+データベース・キャッシュ層（DB/Cache）
+Amazon RDS（Aurora / PostgreSQL / MySQL）：フルマネージド型のリレーショナルデータベース
+Amazon ElastiCache（Redis）：セッション管理やキャッシュ用
+
+ストレージ・静的ファイル（Storage）
+Amazon S3：画像・ログ・静的コンテンツの保存
+
+セキュリティ・運用監視（Security & Operations）
+AWS IAM：権限管理
+AWS Secrets Manager / Parameter Store：DB接続情報やAPIキーの安全な管理
+Amazon CloudWatch：ログ収集およびリソース監視"	
+
+
+質問（Q）	S3に適した画面（機能）と、それ以外のストレージを使うべき画面の違い	
+改善案・理想の回答 	商品詳細画面では、データごとに最適なストレージを選択します。商品名や価格は RDS、商品画像は S3、リアルタイムな在庫数は ElastiCache、そして検索処理は OpenSearch を経由する構成が一般的です。	
+
+
+質問（Q）	AWSのAIP資格とはどのような認定で、主にどのような知識が問われますか？	
+改善案・理想の回答 	"生成AI（大規模言語モデル/LLM、プロンプトエンジニアリング、RAGなど）の仕組み
+
+AWSのAI/ML関連サービス
+Amazon Bedrock：基礎モデル（FM）の選定・活用、ファインチューニング
+Amazon SageMaker：機械学習モデルの構築・訓練・デプロイ"	
+
+
+質問（Q）	LLMとは何ですか？LangChain とは何ですか？LLM と組み合わせてどのようなシステムを構築できますか？	
+改善案・理想の回答 	"LangChain は、LLM（大規模言語モデル）を活用したアプリケーション開発を効率化するためのフレームワークです。
+
+以下のような機能を提供します。
+RAG（検索拡張生成）の構築：社内ドキュメントやデータベースと連動したナレッジ検索チャットボットの作成。
+Prompt Management & LCEL：プロンプトのテンプレート化や処理フロー（チェーン）の簡潔な記述。
+Agent（自律型AI）の実装：API 呼び出しや Web 検索などの「ツール（Tools）」を LLM 自有の判断で実行させるシステムの実現。"	
