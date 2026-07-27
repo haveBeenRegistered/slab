@@ -228,6 +228,15 @@ AWS上でのインフラ設計・構築実務経験（※必須ではありま�
 
 
 
+【必須】
+・AWS設計・構築経験 〇
+・S3、Lambda、Step Functions、EventBridge、ECS、RDS、IAMに関する知識 〇
+・障害対応経験 〇
+・日本語で顧客対応・設計書作成が可能な方（日本語重視）〇
+
+【尚可】
+・Python、Docker、PostgreSQL 〇
+・CloudFormation／CDK（IaC）〇
 
 
 
@@ -259,3 +268,23 @@ AWS上でのインフラ設計・構築実務経験（※必須ではありま�
 
 
 
+
+--------------------
+【生成AI活用支援エンジニア】即日～長期 ｜ 田町・後期リモート併用
+生成AIを活用した業務支援案件です。
+【必須】
+・生成AI / LLMに関する基礎知識（深い研究経験は不要）〇
+・ベクターデータベース（Vector DB）の知識・経験　〇
+・RAGの構築・改善経験　〇
+【尚可】
+・Claude Code / Codex / ChatGPT等の外部AIツールの実務活用経験　〇
+・AWS等クラウド環境での経験　〇
+・プロンプト改善・AI活用フロー最適化の経験　×
+技術レベルよりもAIツールを実際に使いこなした経験を重視しています。
+経験が浅い方でも、AIへの興味・実践経験があればご提案ください。
+日本語N1レベル必須（チームは日本人中心のため、コミュニケーション能力重視）
+
+@sLab_営業_韓 
+面談振り返りは整理済みです
+ご確認お願い致します。
+https://docs.google.com/spreadsheets/d/1wAFysjZV1d3nHJL_ADOHNgk5KXCvyPX31IPo8IDaRGo/edit?gid=0#gid=0
