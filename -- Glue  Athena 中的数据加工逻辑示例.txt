@@ -1,0 +1,39 @@
+-- Glue / Athena 中的数据加工逻辑示例
+WITH CampaignClicks AS (
+    -- 1. 统计每个用户点击营销活动的首次时间
+    SELECT 
+        user_id,
+        campaign_id,
+        MIN(click_time) AS first_click_time
+    FROM s3_user_action_logs
+    WHERE event_type = 'campaign_click'
+    GROUP BY user_id, campaign_id
+),
+OrderConversions AS (
+    -- 2. 关联订单，匹配点击后 7 天内的成功支付订单
+    SELECT 
+        c.campaign_id,
+        c.user_id,
+        c.first_click_time,
+        o.order_id,
+        o.order_amount,
+        o.order_time
+    FROM CampaignClicks c
+    LEFT JOIN rds_orders o 
+        ON c.user_id = o.user_id
+       AND o.order_time >= c.first_click_time 
+       AND o.order_time <= DATE_ADD(c.first_click_time, INTERVAL 7 DAY)
+       AND o.order_status = 'PAID' -- 过滤已取消/退款订单
+)
+-- 3. 按活动汇总得出转化指标
+SELECT 
+    campaign_id,
+    COUNT(DISTINCT user_id) AS total_clicked_users,
+    COUNT(DISTINCT CASE WHEN order_id IS NOT NULL THEN user_id END) AS converted_users,
+    ROUND(
+        COUNT(DISTINCT CASE WHEN order_id IS NOT NULL THEN user_id END) * 100.0 / 
+        NULLIF(COUNT(DISTINCT user_id), 0), 2
+    ) AS conversion_rate_pct,
+    SUM(NVL(order_amount, 0)) AS total_campaign_revenue
+FROM OrderConversions
+GROUP BY campaign_id;
