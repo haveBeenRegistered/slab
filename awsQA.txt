@@ -143,6 +143,24 @@ Lambda内では、対象となるユーザーへクーポンを付与する処�
 ハンドラー内で SSM Parameter Storeパラメータ・ストア の get_parameter API、または Secrets Manager の get_secret_valueゲット API を呼び出して、実行時に安全に取得するように実装しています。
 
 
+具体的な実装としては、AWS Glueグルー（SQL）を用いて、S3上のユーザー行動ログ（クリック）とRDSの注文データをユーザーIDでJOINし、『クリック後7日以内の購入』というアトリビューション条件でデータ加工かこうを行いました。活動ごとのCVR（コンバージョン率）を集計データマートとしてS3に出力し、QuickSightクイックサイト上でファネルチャートやKPIカードとして可視化しました。
+转化率 (CVR) 公式：{营销活动转化率} = {通过活动引流并最终下单的用户数（或订单数）}}{{触达/点击该活动banner的点击数）}} 
+[前端用户点击]
+      ↓ (产生 1 条 JSON)
+[AWS S3 原始日志桶]  (存储大量零碎的 .json 文件)
+      ↓ (每天凌晨 1:00 自动触发)
+[AWS Glue ETL (PySpark)]  (读取 JSON -> 合并压缩 -> 转换为 .parquetパルケ 格式)
+      ↓ (保存到)
+[AWS S3 处理后数据桶]  (存储高效的 .parquet 列式文件)
+      ↓ (Glue Crawler 自动扫描 或 手动建表)
+[AWS Glue Data Catalog] (生成表结构元数据)
+      ↓
+[AWS Athena / Redshift / Spark SQL] (数据分析师使用标准 SQL 高速查询)
+      ↓ (直连数据源 / 定时 SPICE 缓存)
+[Amazon QuickSight 可视化仪表板] (业务方 & 运营人员查看可视化报表)
+
+
+
 
 aws cloudformation aws cdk
 ローカルではCDKのAssertionsアサーションズ（Jest）を使って、テンプレートの単体テストを書きました。、
@@ -168,6 +186,18 @@ X-Rayのセグメントタイムラインを分析したところ、ECSコンテ
 
 このように、CloudWatchとX-Rayを組み合わせることで、複雑な分散システムであっても、勘に頼らず「データ（ログとトレース）」に基づいて迅速に原因を特定し、修正することができました。
 
+
+aws CICD
+
+GitHub webhook->codepipeline -> codeBuild codeTest codeDeploy 
+
+GitHub Actions と似た CI/CD のパイプラインに該当するのは、CodePipeline、CodeBuild、CodeDeploy です。
+
+CodePipeline：パイプライン／オーケストレーション（トリガーや各ステージの連携）に相当します。
+
+CodeBuild：ビルドやテストを実行するランナーに相当します。
+
+CodeDeploy：ビルド成果物をデプロイ先に配置する、いわゆるデプロイ工程を担います。
 
 
 
