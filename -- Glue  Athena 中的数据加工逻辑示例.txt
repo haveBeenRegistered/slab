@@ -37,3 +37,67 @@ SELECT
     SUM(NVL(order_amount, 0)) AS total_campaign_revenue
 FROM OrderConversions
 GROUP BY campaign_id;
+
+
+
+
+① 数据读取与写入（Read & Write）
+spark.read.json() / spark.read.parquet()：从 S3 读取 JSON 或 Parquet 格式的海量生数据。
+
+df.write.parquet()：将清洗后的 DataFrame 转换为 Parquet 格式写入 S3。
+
+df.write.partitionBy("date_col")：按指定列进行分区存储（对于提升 Athena 查询效率极其重要）。
+
+② 数据清洗与过滤（Data Cleaning & Filter）
+df.filter() 或 df.where()：数据过滤（如：.filter(col("user_id").isNotNull()) 过滤空值）。
+
+df.dropDuplicates()：去重（如：根据 order_id 或 event_id 剔除重复日志）。
+
+df.dropna() / df.fillna()：缺失值处理（删除含 Null 的行，或给 Null 填充默认值）。
+
+③ 列的操作与新增（Column Manipulation）
+df.withColumn("new_col", ...)：新增列或修改现有列的计算逻辑（最常用）。
+
+df.drop("col_name")：删除无用或敏感的列（如密码、中间过渡列）。
+
+df.withColumnRenamed("old_name", "new_name")：列重命名（如将日志里的乱码字段统一改名）。
+
+df.cast()：改变数据类型（如：col("price").cast("decimal(10,2)")）。
+
+④ 复杂条件与类型转换（Functions & Conditions）
+when().otherwise()：PySpark 版的 if-else 条件判断。
+
+to_timestamp() / to_date()：将字符串类型的日期转换成标准时间戳/日期格式。
+
+col() / lit()：col("x") 引用某列，lit("value") 生成常量列。
+
+⑤ 聚合与关联（Aggregation & Join）
+df.join(other_df, "user_id", "left")：多表关联（如：S3 行为日志与 RDS 用户表/订单表 JOIN）。
+
+df.groupBy("brand_id").agg(sum("price"), count("*"))：按品牌/渠道分组统计（如：计算 CVR 或销售额）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

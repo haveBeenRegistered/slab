@@ -147,6 +147,11 @@ Lambda内では、対象となるユーザーへクーポンを付与する処�
 
 また、データベースや外部APIの認証情報といった機密データ（Credentials）を扱う際は、Lambda の環境変数に直接書くのではなく、
 ハンドラー内で SSM Parameter Storeパラメータ・ストア の get_parameter API、または Secrets Manager の get_secret_valueゲット API を呼び出して、実行時に安全に取得するように実装しています。
+自分で設計から実装まで担当したTypeScriptのプロジェクトをご紹介します。
+フロントエンドは React.js、バックエンドのAPI実装やDB操作、データ返却処理には Next.js を使用して構築しました。
+実際に公開している焼肉店のQRコード注文システムのテスト環境とリポジトリは以下の通りです。
+•	Bitbucket： https://bitbucket.org/havebeenregistered/master/commits/branch/master
+•	検証用URL： https://checkoutreact.top/#/qrlogin?mobile=13211111111
 
 
 具体的な実装としては、AWS Glueグルー（SQL）を用いて、S3上のユーザー行動ログ（クリック）とRDSの注文データをユーザーIDでJOINし、『クリック後一週間以内の購入』という条件でデータ加工かこうを行いました。イベントごとのCVR（コンバージョン率）を集計データマートとしてS3に出力し、QuickSightクイックサイト上でファネルチャートやKPIカードとして可視化しました。
@@ -165,7 +170,7 @@ Lambda内では、対象となるユーザーへクーポンを付与する処�
       ↓ (直连数据源 / 定时 SPICE 缓存)
 [Amazon QuickSight 可视化仪表板] (业务方 & 运营人员查看可视化报表)
 
-S3に保存された行動ログ（JSON）をAWS Glue (PySpark) でParquetパルケ形式へ変換・圧縮し、
+S3に保存された行動ログ（JSON）をAWS Glue (PySpark パイ・スパーク) でParquetパルケ形式へ変換・圧縮し、
 Athenaアテナでの高速SQL分析およびQuickSightでのダッシュボード可視化を実現するデータパイプラインを構築しました。
 
 
@@ -249,3 +254,4 @@ aibo のアーキテクチャはフロント→API Gateway→Lambda/ECS→ベク
 日常は GitHub Copilot/Claude Code を補助的に使っています。生成コードは必ずレビュー・テスト・静的解析を通して品質を担保し、セキュリティとライセンス面もチェックします。
 
 リスクは機密情報の流出やキー管理の不備、誤生成による業務影響などです。ポリシーには使用範囲、データの脱識別、キー管理、監査ログ、承認フロー、インシデント対応を含めます。
+
