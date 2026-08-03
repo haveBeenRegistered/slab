@@ -143,7 +143,9 @@ Lambda内では、対象となるユーザーへクーポンを付与する処�
 
 よく使うパターンとしては、S3 や SQS などのイベント駆動（Event-Driven）のトリガーです。
 
-例えば、SQS からのメッセージ処理では、Lambda の Handler ハンドラー内で context.get_remaining_time_in_millis() Lambda 関数の実行残時間を取得する関数を監視し、タイムアウト直前に処理を安全に中断する制御を行っています。
+例えば、SQS からのメッセージ処理では、Lambda の Handler ハンドラー内で
+コンテキスト ゲット リメイニング タイム イン ミリズ 
+context.get_remaining_time_in_millis() Lambda 関数の実行残時間を取得する関数を監視し、タイムアウト直前に処理を安全に中断する制御を行っています。
 
 また、データベースや外部APIの認証情報といった機密データ（Credentials）を扱う際は、Lambda の環境変数に直接書くのではなく、
 ハンドラー内で SSM Parameter Storeパラメータ・ストア の get_parameter API、または Secrets Manager の get_secret_valueゲット API を呼び出して、実行時に安全に取得するように実装しています。
@@ -185,6 +187,10 @@ CI/CDパイプライン上のE2EテストとしてTerratestを活用して、実
 AWS CDK は CloudFormation の高レベルなラッパー（抽象化フレームワーク）です。CDK でコード（TypeScript等）を書くと、最終的に CloudFormation テンプレート（YAML/JSON）にコンパイル（Synth）され、CloudFormation のスタックとして AWS 上にデプロイされます。s
 
 
+IAM 用户（User）、IAM 角色（Role） 和 IAM 策略（Policy）
+IAM ユーザーは個人や固定のシステムに紐づく長期的な権限セットであり、
+IAM ロールはサービスや別アカウントが一時的に引き受ける（Assume）ための権限セットです。
+そして IAM ポリシーは、それらに対して『どのリソースにどんな操作を許可/拒否するか』を JSON 形式で定義したルール（証明書）のことです。
 
 
 504対応
@@ -227,6 +233,9 @@ CPU/メモリ使用率や ALB のリクエスト数に応じた ECS サービス
 Application Load Balancer (ALB) をフロントに配置し、ECS サービス（Fargate / EC2 起動タイプ）のコンテナを複数のアベイラビリティゾーン（マルチAZ）に分散配置することで、単一障害点（SPOF）を排除し、無停止デプロイ（ローリングアップデート）やダウンタイムの最小化を実現。
 
 
+
+S3に適した画面（機能）と、それ以外のストレージを使うべき画面の違い	
+改善案・理想の回答 	商品詳細画面では、データごとに最適なストレージを選択します。商品名や価格は RDS、商品画像は S3、リアルタイムな在庫数は ElastiCache、そして検索処理は OpenSearch を経由する構成が一般的です。	
 
 
 
