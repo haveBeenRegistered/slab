@@ -211,7 +211,8 @@ X-Rayのセグメントタイムラインを分析したところ、ECSコンテ
 
 aws CICD
 
-GitHub webhook->codepipeline -> codeBuild codeTest codeDeploy 
+GitHub webhook->codepipeline -> codeBuild codeTest codeDeploy
+各ステージを実行します。 
 
 GitHub Actions と似た CI/CD のパイプラインに該当するのは、CodePipeline、CodeBuild、CodeDeploy です。
 
