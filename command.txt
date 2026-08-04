@@ -1,6 +1,9 @@
 sudo -i
 docker logs -f tokyo_query
 sudo docker stop tokyo_query
+chmod 666 tokyo_query_config.json
+
+docker logs -f user_email1
 
 # 删除容器
 sudo docker rm tokyo_query
