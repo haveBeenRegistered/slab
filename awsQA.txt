@@ -213,6 +213,9 @@ aws CICD
 
 GitHub webhook->codepipeline -> codeBuild codeTest codeDeploy
 各ステージを実行します。 
+CodePipeline が最新のソースコードを自動的にダウンロードし、CodeBuild を起動します。CodeBuild は特権モード（Privileged）環境で docker build を実行し、
+ビルドされた最新のイメージを Amazon ECR にプッシュすると同時に、デプロイスクリプトを含むアーティファクト（展開マニフェスト）を出力します。
+
 
 GitHub Actions と似た CI/CD のパイプラインに該当するのは、CodePipeline、CodeBuild、CodeDeploy です。
 
